@@ -84,3 +84,26 @@ def verify_account(request: HttpRequest):
 #Login view
 # This view handles the login of existing users. It checks if the email and password are correct.
 # If the credentials are valid, it logs the user in and redirects them to the home page.
+
+def login(request: HttpRequest):
+    if request.method == "POST":
+        email:str = request.POST["email"]
+        password:str = request.POST["password"]
+        user = auth.authenticate(request, email=email, password=password)
+        if user is not None:
+            auth.login(request, user)
+            messages.success(request, "You are now logged in")
+            return redirect("home")
+        else:
+            messages.error(request, "Invalid email or password")
+            return redirect("login")
+        
+    else:
+        return render(request, "login.html")
+    
+    
+#Logout view
+def logout(request: HttpRequest):
+    auth.logout(request)
+    messages.success(request, "You have been logged out")
+    return redirect("home")

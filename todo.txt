@@ -1,0 +1,2 @@
+Authentication  -Done
+Pytest  (pip install pytest-django) (create folder in the specific app tests)
