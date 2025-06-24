@@ -14,10 +14,12 @@ from django.contrib.messages.storage.base import Message
 from conftest import client
 
 
-User = get_user_model()
+User = get_user_model() # Ensure that the User model is imported correctly
     
-pytestmark = pytest.mark.django_db
+pytestmark = pytest.mark.django_db # Ensure that all tests run with a database transaction
 
+
+# Test for registering a new user
 def test_register_user(client: Client):
     url = reverse('register')
     data = {
@@ -37,7 +39,7 @@ def test_register_user(client: Client):
     assert "verification code sent to" in str(messages[0]).lower()
 
 
-
+# Test for registering a user with an existing email
 def test_register_user_duplicate_email(client: Client, user_instance):
     url = reverse('register')
     data = {
@@ -57,7 +59,7 @@ def test_register_user_duplicate_email(client: Client, user_instance):
 
 
 
-
+# Test for verify account with valid code
 def test_verify_account_valid_code(client:Client):
     pending_user =PendingUser.objects.create(
         email = 'abc@gmail.com',
@@ -78,7 +80,7 @@ def test_verify_account_valid_code(client:Client):
     assert user.is_authenticated
   
 
-
+# Test for verify account with invalid code
 def test_verify_account_invalid_code():
     client = Client() 
     pending_user = PendingUser.objects.create(
@@ -96,9 +98,22 @@ def test_verify_account_invalid_code():
     assert response.status_code == 400  # Assuming the view returns 200 for invalid code
     assert User.objects.count() == 0  # No user should be created
     
-   
-def test_login_valid_credentials():
-    pass
+# Test for login with valid credentials   
+def test_login_valid_credentials(client: Client, user_instance):
+    url = reverse('login')
+
+    data = {
+        'email': user_instance.email,
+        'password': 'testpassword123'  # Plaintext password
+    }
+    response = client.post(url, data)
+    assert response.status_code == 302  # Redirect after login
+    assert response.url == reverse('home')
+
+    messages = list(get_messages(response.wsgi_request))
+    assert len(messages) == 1
+    assert messages[0].tags == 'success'
+    assert "you are now logged in" in messages[0].message.lower()
 
 
 def test_login_invalid_credentials():

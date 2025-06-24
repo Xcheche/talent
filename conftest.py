@@ -1,3 +1,12 @@
+"""
+For adding fixtures to a Django test environment.
+This file contains pytest fixtures for setting up a Django test environment.
+It includes a client fixture for making requests, a user instance fixture for creating a test user,
+and an authentication user password fixture for testing purposes.
+"""
+
+
+
 from django.test.client import Client
 import pytest
 
@@ -21,3 +30,8 @@ def user_instance(db):
         email='testuser@example.com',
         password='testpassword123'
     )
+    
+@pytest.fixture    
+def auth_user_password() -> str:
+    return 'testpassword123'
+    

@@ -1,2 +1,8 @@
 Authentication  -Done
 Pytest  (pip install pytest-django) (create folder in the specific app tests)
+pytest.ini
+confest.py  // 
+To run the Pytest 
+
+
+pytest -k "name of test"
