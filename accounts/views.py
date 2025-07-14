@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 
 from .models import PendingUser
 
-from django.utils.crypto import get_random_string # Create your views here.
+from django.utils.crypto import get_random_string  # Create your views here.
 from django.contrib.auth.hashers import make_password
 from django.contrib import auth
 from datetime import datetime
@@ -14,16 +14,13 @@ from django.utils import timezone
 
 User = get_user_model()
 
-#Home view
+
+# Home view
 def home(request: HttpRequest):
-    return render(request, 'home.html')
+    return render(request, "home.html")
 
 
-
-
-
-
-#Register view with email verification
+# Register view with email verification
 # This view handles the registration of a new user. It checks if the email already exists in the database.
 # If the email is new, it creates a new PendingUser object with a verification code and sends a verification email.
 def register(request: HttpRequest):
@@ -81,14 +78,15 @@ def verify_account(request: HttpRequest):
             return render(request, "verify_account.html", {"email": email}, status=400)
 
 
-#Login view
+# Login view
 # This view handles the login of existing users. It checks if the email and password are correct.
 # If the credentials are valid, it logs the user in and redirects them to the home page.
 
+
 def login(request: HttpRequest):
     if request.method == "POST":
-        email:str = request.POST["email"]
-        password:str = request.POST["password"]
+        email: str = request.POST["email"]
+        password: str = request.POST["password"]
         user = auth.authenticate(request, email=email, password=password)
         if user is not None:
             auth.login(request, user)
@@ -97,12 +95,12 @@ def login(request: HttpRequest):
         else:
             messages.error(request, "Invalid email or password")
             return redirect("login")
-        
+
     else:
         return render(request, "login.html")
-    
-    
-#Logout view
+
+
+# Logout view
 def logout(request: HttpRequest):
     auth.logout(request)
     messages.success(request, "You have been logged out")

@@ -5,8 +5,6 @@ It includes a client fixture for making requests, a user instance fixture for cr
 and an authentication user password fixture for testing purposes.
 """
 
-
-
 from django.test.client import Client
 import pytest
 
@@ -16,7 +14,6 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-
 @pytest.fixture
 def client():
     return Client()
@@ -24,14 +21,14 @@ def client():
 
 # pytest fixture to create a user instance for testing
 
+
 @pytest.fixture
 def user_instance(db):
     return User.objects.create_user(
-        email='testuser@example.com',
-        password='testpassword123'
+        email="testuser@example.com", password="testpassword123"
     )
-    
-@pytest.fixture    
+
+
+@pytest.fixture
 def auth_user_password() -> str:
-    return 'testpassword123'
-    
+    return "testpassword123"
